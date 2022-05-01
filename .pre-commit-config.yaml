@@ -22,7 +22,6 @@ repos:
       - id: check-symlinks
       - id: check-xml
       - id: mixed-line-ending
-        args: ["--fix=lf"]
         auto-correct: true
       - id: detect-private-key
       - id: check-added-large-files
