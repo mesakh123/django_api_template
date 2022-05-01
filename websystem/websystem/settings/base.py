@@ -39,7 +39,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-LOCAL_APPS = ["home", "book"]
+LOCAL_APPS = ["home", "book", "users"]
 
 THIRD_PARTY_APPS = [
     "drf_spectacular",
@@ -86,9 +86,13 @@ WSGI_APPLICATION = "websystem.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "../db.sqlite3",
     }
 }
+
+
+# User auth
+AUTH_USER_MODEL = "users.User"
 
 
 # Password validation
@@ -119,7 +123,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Your project description",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    # OTHER SETTINGS
 }
 
 # Internationalization
