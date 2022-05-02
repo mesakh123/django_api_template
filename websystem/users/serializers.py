@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from websystem.choices import ROLE_CHOICE
+
 from .models import User
 
 
@@ -25,7 +27,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email", "password"]
+        fields = ["username", "first_name", "last_name", "email", "password", "role"]
 
     def validate(self, attrs):
         email = attrs.get("email", "")
@@ -51,7 +53,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("account", "role", "password", "token")
+        fields = ("account", "password", "token")
         read_only_fields = ["token"]
 
 

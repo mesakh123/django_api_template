@@ -13,6 +13,8 @@ from django.utils.translation import gettext_lazy as _
 from django_rest_passwordreset.signals import reset_password_token_created
 from helpers.model_helper import TrackingModel
 
+from websystem.choices import ROLE_CHOICE
+
 from .manager import MyUserManager
 
 
@@ -23,11 +25,6 @@ class User(AbstractUser, PermissionsMixin, TrackingModel):
     admin-compliant permissions.
     Username and password are required. Other fields are optional.
     """
-
-    class ROLE_CHOICE(models.TextChoices):
-        ADMIN = 1, "Admin"
-        MANAGER = 2, "Manager"
-        EMPLOYEE = 3, "Employee"
 
     username_validator = UnicodeUsernameValidator()
 
@@ -71,7 +68,7 @@ class User(AbstractUser, PermissionsMixin, TrackingModel):
     photo = models.ImageField(upload_to="users", default="default.jpg")
     objects = MyUserManager()  # says how objects are created or retrived
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
         return self.email

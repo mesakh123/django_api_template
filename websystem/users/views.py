@@ -10,6 +10,13 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
+from websystem.permissions import (
+    AdminEmployeePermission,
+    AdminManagerPermission,
+    AdminPermission,
+    SelfPermission,
+)
+
 from .models import User
 from .serializers import (
     LoginResponseSerializer,
@@ -23,14 +30,14 @@ from .serializers import (
 class UserDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     lookup_field = "username"
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = permissions.IsAuthenticated
     authentication_classes = (JWTAuthentication,)
     serializer_class = UserDetailSerializer
 
 
 class UsersListAPIView(ListAPIView):
     queryset = User.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, AdminEmployeePermission)
     authentication_classes = (JWTAuthentication,)
     serializer_class = UserListSerializer
 
