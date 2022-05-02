@@ -20,11 +20,10 @@ class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
     Username and password are required. Other fields are optional.
     """
 
-    ADMIN = 1
-    MANAGER = 2
-    EMPLOYEE = 3
-
-    ROLE_CHOICES = ((ADMIN, "Admin"), (MANAGER, "Manager"), (EMPLOYEE, "Employee"))
+    class ROLE_CHOICE(models.TextChoices):
+        ADMIN = 1, "Admin"
+        MANAGER = 2, "Manager"
+        EMPLOYEE = 3, "Employee"
 
     username_validator = UnicodeUsernameValidator()
 
@@ -45,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
     email = models.EmailField(_("email address"), blank=False, unique=True)
 
     role = models.PositiveSmallIntegerField(
-        choices=ROLE_CHOICES, blank=True, null=True, default=7
+        choices=ROLE_CHOICE.choices, blank=True, null=True, default=7
     )
     is_staff = models.BooleanField(
         default=False,
