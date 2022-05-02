@@ -6,9 +6,13 @@ class AbstractSetPagination(pagination.PageNumberPagination):
     page_query_param = "page"
 
 
+class SmallResultsSetPagination(AbstractSetPagination):
+    page_size = 5
+
+
 class MediumResultsSetPagination(AbstractSetPagination):
     page_size = 25
 
 
-class SmallResultsSetPagination(AbstractSetPagination):
+class LargeResultsSetPagination(AbstractSetPagination):
     page_size = 50
