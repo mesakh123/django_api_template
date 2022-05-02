@@ -20,7 +20,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from users.views import LoginAPIView, RegisterAPIView
+from users.views import AuthUserAPIView, LoginAPIView, RegisterAPIView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("login/", LoginAPIView.as_view(), name="login"),
     path("register/", RegisterAPIView.as_view(), name="register"),
+    path("user/", AuthUserAPIView.as_view(), name="user"),
 ]
