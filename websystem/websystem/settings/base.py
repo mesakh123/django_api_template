@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "django_filters",
     "django_extensions",
+    "django_rest_passwordreset",
 ]
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -58,6 +59,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 
 ROOT_URLCONF = "websystem.urls"
 

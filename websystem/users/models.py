@@ -2,18 +2,22 @@ from datetime import datetime, timedelta
 
 import jwt
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.mail import send_mail
 from django.db import models
+from django.dispatch import receiver
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_rest_passwordreset.signals import reset_password_token_created
 from helpers.model_helper import TrackingModel
 
 from .manager import MyUserManager
 
 
 # Create your models here.
-class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
+class User(AbstractUser, PermissionsMixin, TrackingModel):
     """
     An abstract base class implementing a fully featured User model with
     admin-compliant permissions.
@@ -67,9 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
     photo = models.ImageField(upload_to="users", default="default.jpg")
     objects = MyUserManager()  # says how objects are created or retrived
 
-    EMAIL_FIELD = "email"
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
@@ -86,3 +88,24 @@ class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
             algorithm="HS256",
         )
         return token
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(
+    sender, instance, reset_password_token, *args, **kwargs
+):
+
+    email_plaintext_message = "{}?token={}".format(
+        reverse("password_reset:reset-password-request"), reset_password_token.key
+    )
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Some website title"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "cmesakh@ymail.com",
+        # to:
+        [reset_password_token.user.email],
+    )

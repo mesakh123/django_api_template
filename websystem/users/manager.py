@@ -1,4 +1,5 @@
 from django.contrib.auth.models import UserManager
+from django.db.models import Q
 
 
 class MyUserManager(UserManager):
@@ -39,3 +40,9 @@ class MyUserManager(UserManager):
             raise ValueError("Superuser must have role of Global Admin")
 
         return self._create_user(username, email, password, **extra_fields)
+
+    def get_by_natural_key(self, username):
+        return self.get(
+            Q(**{self.model.USERNAME_FIELD: username})
+            | Q(**{self.model.EMAIL_FIELD: username})
+        )

@@ -1,5 +1,6 @@
 import jwt
 from django.conf import settings
+from drf_spectacular.extensions import OpenApiAuthenticationExtension
 from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 from users.models import User
@@ -21,10 +22,13 @@ class JWTAuthentication(BaseAuthentication):
 
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms="HS256")
+            username = payload.get("username", None)
+            email = payload.get("email", None)
 
-            username = payload["username"]
-
-            user = User.objects.get(username=username)
+            if username:
+                user = User.objects.get(username=username)
+            elif email:
+                email = User.objects.get(email=email)
             return (user, token)
 
         except jwt.ExpiredSignatureError:
