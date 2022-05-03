@@ -24,6 +24,7 @@ from drf_spectacular.views import (
 from .views import (
     AuthUserAPIView,
     LoginAPIView,
+    LogoutAPIView,
     RegisterAPIView,
     UserDetailAPIView,
     UsersListAPIView,
@@ -31,9 +32,10 @@ from .views import (
 
 urlpatterns = [
     path("login/", LoginAPIView.as_view(), name="login"),
+    path("logout/", LogoutAPIView.as_view(), name="logout"),
     path("register/", RegisterAPIView.as_view(), name="register"),
     path("list", UsersListAPIView.as_view(), name="user-list"),
-    path("", AuthUserAPIView.as_view(), name="user-detail"),
+    path("", UserDetailAPIView.as_view(), name="user-detail"),
     path(
         "password_reset/",
         include("django_rest_passwordreset.urls", namespace="password_reset"),

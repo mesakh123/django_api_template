@@ -1,21 +1,16 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
 from drf_spectacular.utils import extend_schema
 from helpers.jwt_helper import JWTAuthentication
-from rest_framework import generics, mixins, permissions, response, status, viewsets
+from rest_framework import permissions, response, status
 from rest_framework.generics import (
     GenericAPIView,
     ListAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from websystem.permissions import (
-    AdminEmployeePermission,
-    AdminManagerPermission,
-    AdminPermission,
-    SelfPermission,
-)
+from websystem.permissions import AdminEmployeePermission, IsNotAuthenticated
 
 from .models import User
 from .serializers import (
@@ -30,7 +25,7 @@ from .serializers import (
 class UserDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     lookup_field = "username"
-    permission_classes = permissions.IsAuthenticated
+    permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JWTAuthentication,)
     serializer_class = UserDetailSerializer
 
@@ -53,8 +48,8 @@ class AuthUserAPIView(GenericAPIView):
 
 
 class RegisterAPIView(GenericAPIView):
-    authentication_classes = []
 
+    permission_classes = (IsNotAuthenticated,)
     serializer_class = RegisterSerializer
 
     @extend_schema(request=RegisterSerializer)
@@ -69,7 +64,8 @@ class RegisterAPIView(GenericAPIView):
 
 
 class LoginAPIView(GenericAPIView):
-    authentication_classes = []
+
+    permission_classes = (IsNotAuthenticated,)
 
     serializer_class = LoginSerializer
     response_serializer_class = LoginResponseSerializer
@@ -81,10 +77,18 @@ class LoginAPIView(GenericAPIView):
         user = authenticate(username=account, password=password)
 
         if user:
+            login(request, user)
             serializer = self.response_serializer_class(user)
-
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         return response.Response(
             {"message": "Invalid credentials, try again"},
             status=status.HTTP_401_UNAUTHORIZED,
         )
+
+
+class LogoutAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        logout(request)
+        return Response({"msg": "Successfully Logged out"}, status=status.HTTP_200_OK)

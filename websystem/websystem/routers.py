@@ -1,7 +1,8 @@
-from book.views import BookViewSet
+from book.views import AuthorViewSet, BookViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r"books", BookViewSet, basename="Book")
+router.register(r"book", BookViewSet, basename="Book")
+router.register(r"author", AuthorViewSet, basename="Author")
 app_name = "api"
 urlpatterns = router.urls

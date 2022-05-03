@@ -1,8 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 from .models import User
+
+
+class UserCreationFormExtra(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
 
 
 class UserChangeFormExtra(UserChangeForm):
@@ -12,6 +17,8 @@ class UserChangeFormExtra(UserChangeForm):
 
 # Register your models here.
 class UserAdminExtra(UserAdmin):
+    form = UserChangeFormExtra
+    add_form = UserCreationFormExtra
     readonly_fields = ["date_joined"]
     fieldsets = (
         (None, {"fields": ("username", "password")}),
