@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from helpers.jwt_helper import JWTAuthentication
 from rest_framework import permissions, response, status
@@ -9,8 +10,9 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from websystem.permissions import AdminEmployeePermission, IsNotAuthenticated
+from websystem.permissions import AdminEmployeePermission, IsNotAuthenticated, IsOwner
 
 from .models import User
 from .serializers import (
@@ -38,10 +40,10 @@ class UsersListAPIView(ListAPIView):
 
 
 class AuthUserAPIView(GenericAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
     authentication_classes = (JWTAuthentication,)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = request.user
         serializer = UserDetailSerializer(user)
         return response.Response({"user": serializer.data})
@@ -70,7 +72,7 @@ class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     response_serializer_class = LoginResponseSerializer
 
-    @extend_schema(request=LoginSerializer, responses=LoginResponseSerializer)
+    @extend_schema(request=LoginSerializer)
     def post(self, request):
         account = request.data.get("account", None)
         password = request.data.get("password", None)
@@ -79,7 +81,15 @@ class LoginAPIView(GenericAPIView):
         if user:
             login(request, user)
             serializer = self.response_serializer_class(user)
-            return response.Response(serializer.data, status=status.HTTP_200_OK)
+            tokens = {
+                "accessToken": serializer.data.get("token"),
+                "refreshToken": str(RefreshToken.for_user(user)),
+            }
+            print("tokens ", tokens)
+            return response.Response(
+                tokens,
+                status=status.HTTP_200_OK,
+            )
         return response.Response(
             {"message": "Invalid credentials, try again"},
             status=status.HTTP_401_UNAUTHORIZED,

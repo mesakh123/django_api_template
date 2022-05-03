@@ -21,6 +21,13 @@ class IsNotAuthenticated(BasePermission):
         raise LoginInvalidException
 
 
+class IsOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if obj.user:
+            return request.user == obj.user
+        return False
+
+
 class AdminPermission(BasePermission):
     message = "Need admin privilege to perform this operation"
 
@@ -34,8 +41,6 @@ class AdminEmployeePermission(BasePermission):
     message = "Need admin or employee privilege to perform this operation"
 
     def has_permission(self, request, view):
-        for t in [ROLE_CHOICE.ADMIN, ROLE_CHOICE.EMPLOYEE]:
-            print(f"{t} ", type(t))
         return hasattr(request.user, "role") and request.user.role in [
             ROLE_CHOICE.ADMIN,
             ROLE_CHOICE.EMPLOYEE,
