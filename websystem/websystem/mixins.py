@@ -14,13 +14,13 @@ class AdvFlexFieldsMixin:
 
 
 class ActionBasedSerializerClassMixin(ModelViewSet):
-    serializer_class: Optional[type[Serializer]] = None
-    list_serializer_class: Optional[type[Serializer]] = None
-    create_serializer_class: Optional[type[Serializer]] = None
-    retrieve_serializer_class: Optional[type[Serializer]] = None
-    update_serializer_class: Optional[type[Serializer]] = None
-    partial_update_serializer_class: Optional[type[Serializer]] = None
-    destroy_serializer_class: Optional[type[Serializer]] = None
+    serializer_class: Optional[Serializer]= None
+    list_serializer_class: Optional[Serializer] = None
+    create_serializer_class: Optional[Serializer] = None
+    retrieve_serializer_class: Optional[Serializer] = None
+    update_serializer_class: Optional[Serializer] = None
+    partial_update_serializer_class: Optional[Serializer] = None
+    destroy_serializer_class: Optional[Serializer] = None
 
     def get_serializer_class(self):
         action_serializer_class_map = {
