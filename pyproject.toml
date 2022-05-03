@@ -17,6 +17,8 @@ drf-flex-fields = "^0.9.8"
 PyJWT = "^2.3.0"
 Pillow = "^9.1.0"
 django-rest-passwordreset = "^1.2.1"
+djoser = "^2.1.0"
+django-allauth = "^0.50.0"
 
 [tool.poetry.dev-dependencies]
 
