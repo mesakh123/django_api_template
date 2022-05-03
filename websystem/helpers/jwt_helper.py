@@ -16,7 +16,7 @@ class JWTAuthentication(BaseAuthentication):
         auth_token = auth_data.split(" ")
 
         if len(auth_token) != 2:
-            raise exceptions.AuthenticationFailed("Token not valid")
+            raise exceptions.AuthenticationFailed({"message": "Token not valid"})
 
         token = auth_token[1]
 

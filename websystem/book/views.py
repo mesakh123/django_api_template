@@ -22,16 +22,21 @@ class BookViewSet(AdvFlexFieldsMixin, ModelViewSet):
     # Limit action , accepted settings:
     # create, retrieve, update, partial_update,destroy and list
     public_action = ["list"]
-    manager_action = ["create", "retrieve", "update", "partial_update"] + public_action
-    admin_action = ["delete"] + manager_action
+    protected_action = [
+        "create",
+        "retrieve",
+        "update",
+        "partial_update",
+    ] + public_action
+    private_action = ["delete"] + protected_action
 
     def get_permissions(self):
         if self.action in self.public_action:
             return [
                 permissions.AllowAny(),
             ]
-        elif self.action in self.manager_action:
+        elif self.action in self.protected_action:
             return [AdminManagerPermission()]
-        elif self.action in self.admin_action:
+        elif self.action in self.private_action:
             return [AdminPermission()]
         return super().get_permissions()
