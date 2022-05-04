@@ -76,12 +76,19 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("account", "password", "token")
-        read_only_fields = ["token"]
+        fields = ("account", "password", "access_token", "refresh_token")
+        read_only_fields = ["access_token", "refresh_token"]
 
 
 class LoginResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email", "role", "password", "token")
-        read_only_fields = ["token"]
+        fields = (
+            "username",
+            "email",
+            "role",
+            "password",
+            "access_token",
+            "refresh_token",
+        )
+        read_only_fields = ["access_token", "refresh_token"]

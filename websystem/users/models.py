@@ -76,7 +76,7 @@ class User(AbstractUser, PermissionsMixin, TrackingModel):
         return self.email
 
     @property
-    def token(self):
+    def access_token(self):
         token = jwt.encode(
             {
                 "username": self.username,
@@ -84,6 +84,19 @@ class User(AbstractUser, PermissionsMixin, TrackingModel):
                 "exp": datetime.utcnow() + timedelta(hours=24),
             },
             settings.SECRET_KEY,
+            algorithm="HS256",
+        )
+        return token
+
+    @property
+    def refresh_token(self):
+        token = jwt.encode(
+            {
+                "username": self.username,
+                "email": self.email,
+                "exp": datetime.utcnow() + datetime.timedelta(days=7),
+            },
+            settings.REFRESH_TOKEN_SECRET,
             algorithm="HS256",
         )
         return token
