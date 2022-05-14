@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RestrictionConfig(AppConfig):
+class ProfilesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "restriction"
+    name = "apps.profiles"

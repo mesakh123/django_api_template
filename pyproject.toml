@@ -12,6 +12,14 @@ Markdown = "^3.3.6"
 django-filter = "^21.1"
 drf-spectacular = "^0.22.1"
 pre-commit = "^2.18.1"
+django-environ = "^0.8.1"
+django-autoslug = "^1.9.8"
+django-countries = "^7.3.2"
+Pillow = "^9.1.0"
+django-phonenumber-field = "^6.1.0"
+phonenumbers = "^8.12.48"
+psycopg2-binary = "^2.9.3"
+isort = "^5.10.1"
 
 [tool.poetry.dev-dependencies]
 
