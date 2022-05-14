@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
     "phonenumber_field",
     "djoser",
     "rest_framework_simplejwt",
+    "django_extensions",
 ]
 
 

@@ -15,6 +15,8 @@ class Gender(models.TextChoices):
 
 
 class Profile(TimeStampedUUIDModel):
+    SELECT_RELATED_FIELDS = ["user"]
+    PREFETCH_RELATED_FIELDS = ["agent_review"]
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     phone_number = PhoneNumberField(
         verbose_name=_("Phone Number"), max_length=30, default="+41524204242"
