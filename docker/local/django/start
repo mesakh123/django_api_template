@@ -8,4 +8,5 @@ set -o nounset
 
 python3 manage.py migrate --no-input
 python3 manage.py collectstatic --no-input
-python3 manage.py runserver 0.0.0.0:8000
+#python3 manage.py runserver 0.0.0.0:8000
+gunicorn websystem.asgi:application --bind 0.0.0.0:8000 -w 4 --worker-class uvicorn.workers.UvicornWorker

@@ -17,7 +17,7 @@ services:
             - ./envs/local.env
         depends_on:
             - postgres-db
-            #- redis
+            - redis
         networks:
             - estate-react
 

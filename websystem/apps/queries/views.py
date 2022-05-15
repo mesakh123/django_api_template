@@ -25,6 +25,7 @@ def send_enquiry_email(request):
         recipient_list = [DEFAULT_FROM_EMAIL]
 
         send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+        # post_send_enqueries_mail.delay(subject, message, from_email, recipient_list)
 
         enquiry = Enquiry(name=name, email=email, subject=subject, message=message)
         enquiry.save()
