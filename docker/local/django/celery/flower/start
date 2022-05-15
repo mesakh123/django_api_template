@@ -16,6 +16,4 @@ until worker_ready; do
 done
 >&2 echo 'Celery workers are available and ready!...:-)'
 
-flower \
-    --app=websystem \
-    --broker="${CELERY_BROKER}"
+celery  --broker="${CELERY_BROKER}" flower --app=websystem

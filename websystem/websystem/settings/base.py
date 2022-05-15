@@ -54,6 +54,7 @@ THIRD_PARTY_APPS = [
     "djoser",
     "rest_framework_simplejwt",
     "django_extensions",
+    "djcelery_email",
 ]
 
 

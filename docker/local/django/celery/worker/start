@@ -4,6 +4,6 @@ set -o errexit
 
 set -o nounset
 
-celery -A websystem worker -l info -Q estates -n estates_worker@%h
+watchmedo auto-restart -d websystem/ -p "*.py" -- celery -A websystem worker -l info -Q estates -n estates_worker@%h
 # Format:
 # celery -A visionai worker -l info -Q queue -n queue-worker@%h &

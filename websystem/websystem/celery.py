@@ -2,10 +2,12 @@ import os
 
 from celery import Celery
 
+from .settings.base import INSTALLED_APPS
+
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "websystem.settings.dev")
 
-app = Celery("websystem", broker="amqp://guest@flower:5672//")
+app = Celery("websystem")
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
@@ -14,7 +16,7 @@ app = Celery("websystem", broker="amqp://guest@flower:5672//")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django apps.
-app.autodiscover_tasks()
+app.autodiscover_tasks(lambda: INSTALLED_APPS)
 
 
 @app.task(bind=True)

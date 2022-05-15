@@ -38,7 +38,7 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 # Allow user to manage deps in dev container
 COPY pyproject.toml pyproject.toml
 COPY poetry.lock poetry.lock
-RUN poetry export -f requirements.txt -o requirements.txt --dev --without-hashes
+RUN poetry export -f requirements.txt -o requirements.txt --without-hashes
 RUN --mount=type=cache,target=/root/.cache/pip \
   pip install -r ./requirements.txt
 
