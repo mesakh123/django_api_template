@@ -1,0 +1,110 @@
+version: "3.9"
+
+services:
+    api:
+        restart: always
+        build:
+            context: .
+            dockerfile: ./docker/local/django/Dockerfile
+        command: /start
+        volumes:
+            - ./websystem:/app
+            - static_volume:/app/staticfiles
+            - media_volume:/app/mediafiles
+        expose:
+            - "8000"
+        env_file:
+            - ./envs/local.env
+        depends_on:
+            - postgres-db
+            #- redis
+        networks:
+            - estate-react
+
+#   client:
+#       build:
+#           context: ./client
+#           dockerfile: ./docker/local/Dockerfile
+#       restart: on-failure
+#       volumes:
+#           - ./client:/app
+#           - /app/node_modules
+#       networks:
+#           - estate-react
+
+    postgres-db:
+        restart: always
+        image: postgres:14
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        env_file:
+            - ./envs/local.env
+        networks:
+            - estate-react
+
+    # redis:
+    #     restart: always
+    #     image: redis:6.2.6
+    #     networks:
+    #         - estate-react
+
+    # celery_worker:
+    #     image: celery_worker:latest
+    #     restart: always
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/local/django/Dockerfile
+    #     command: /start-celeryworker
+    #     volumes:
+    #         - ./websystem:/app
+    #     env_file:
+    #         - ./envs/local.env
+    #     depends_on:
+    #         - redis
+    #         - postgres-db
+    #     networks:
+    #         - estate-react
+
+    # flower:
+    #     restart: always
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/local/django/Dockerfile
+    #     command: /start-flower
+    #     volumes:
+    #         - ./websystem:/app
+    #     env_file:
+    #         - ./envs/local.env
+    #     ports:
+    #         - "5557:5555"
+    #     depends_on:
+    #         - redis
+    #         - postgres-db
+    #     networks:
+    #         - estate-react
+
+    nginx:
+        restart: always
+        depends_on:
+            - api
+        volumes:
+            - static_volume:/app/staticfiles
+            - media_volume:/app/mediafiles
+        build:
+            context: ./docker/local/nginx
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        networks:
+            - estate-react
+
+networks:
+    estate-react:
+        driver: bridge
+
+volumes:
+    postgres_data:
+    static_volume:
+    media_volume:

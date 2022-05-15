@@ -3,6 +3,8 @@ import logging
 import django_filters
 from django.db.models import query
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
+from requests import request
 from rest_framework import filters, generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -83,7 +85,9 @@ class ListAgentsPropertiesAPIView(generics.ListAPIView):
 
 class PropertyViewsAPIView(generics.ListAPIView):
     serializer_class = PropertyViewSerializer
-    queryset = PropertyViews.objects.all()
+    queryset = PropertyViews.objects.all().select_related(
+        *PropertyViews.SELECT_RELATED_FIELDS
+    )
 
 
 class PropertyDetailView(APIView):
@@ -129,6 +133,7 @@ def update_property_api_view(request, slug):
         return Response(serializer.data)
 
 
+@extend_schema(request=PropertyCreateSerializer)
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
 def create_property_api_view(request):

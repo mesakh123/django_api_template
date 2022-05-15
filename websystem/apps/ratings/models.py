@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
-from websystem.settings.base import AUTH_USER_MODEL
+from websystem.settings.dev import AUTH_USER_MODEL
 
 
 class Rating(TimeStampedUUIDModel):

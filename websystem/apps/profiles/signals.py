@@ -4,7 +4,7 @@ from apps.profiles.models import Profile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from websystem.settings.base import AUTH_USER_MODEL
+from websystem.settings.dev import AUTH_USER_MODEL
 
 logger = logging.getLogger(__name__)
 

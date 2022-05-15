@@ -1,5 +1,4 @@
 from datetime import timedelta
-from msilib.schema import CustomAction
 from pathlib import Path
 
 import environ
@@ -94,13 +93,6 @@ WSGI_APPLICATION = "websystem.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 
 # Password validation
@@ -240,7 +232,7 @@ logging.config.dictConfig(
                 "level": "INFO",
                 "class": "logging.FileHandler",
                 "formatter": "file",
-                "filename": "logs/real_estate.log",
+                "filename": "logs/real_production.log",
             },
             "django.server": DEFAULT_LOGGING["handlers"]["django.server"],
         },
