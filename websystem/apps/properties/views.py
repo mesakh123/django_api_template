@@ -44,9 +44,9 @@ class PropertyFilter(django_filters.FilterSet):
 class ListAllPropertiesAPIView(generics.ListAPIView):
     serializer_class = PropertySerializer
     queryset = (
-        Property.objects.all()
+        Property.objects.select_related(*Property.SELECT_RELATED_FIELDS)
+        .all()
         .order_by("-created_at")
-        .select_related(*Property.SELECT_RELATED_FIELDS)
     )
     pagination_class = PropertyPagination
     filter_backends = [
@@ -72,13 +72,14 @@ class ListAgentsPropertiesAPIView(generics.ListAPIView):
     filterset_class = PropertyFilter
     search_fields = ["country", "city"]
     ordering_fields = ["created_at"]
+    authentication_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         queryset = (
-            Property.objects.filter(user=user)
+            Property.objects.select_related(*Property.SELECT_RELATED_FIELDS)
+            .filter(user=user)
             .order_by("-created_at")
-            .select_related(*Property.SELECT_RELATED_FIELDS)
         )
         return queryset
 
@@ -197,9 +198,9 @@ class PropertySearchAPIView(APIView):
     serializer_class = PropertyCreateSerializer
 
     def post(self, request):
-        queryset = Property.objects.filter(published_status=True).select_related(
+        queryset = Property.objects.select_related(
             *Property.SELECT_RELATED_FIELDS
-        )
+        ).filter(published_status=True)
         data = self.request.data
 
         advert_type = data["advert_type"]

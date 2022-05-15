@@ -41,7 +41,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_full_name(self, obj):
         first_name = obj.user.first_name.title()
-        last_name = obj.user.last_name.title()
+        last_name = obj.user.last_name.title() if obj.user.last_name else ""
         return f"{first_name} {last_name}"
 
     def get_reviews(self, obj):

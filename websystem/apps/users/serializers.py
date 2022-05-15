@@ -39,7 +39,9 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.first_name.title()
 
     def get_last_name(self, obj):
-        return obj.last_name.title()
+        if obj.last_name:
+            return obj.last_name.title()
+        return ""
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

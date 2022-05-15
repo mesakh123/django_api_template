@@ -1,20 +1,23 @@
 from apps.profiles.models import Profile
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .models import Rating
+from .serializers import RatingSerializer
 
 User = get_user_model()
 
 
 # create agent review
+@extend_schema(request=RatingSerializer)
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
 def create_agent_review(request, profile_id):
-    agent_profile = Profile.objects.get(id=profile_id, is_agent=True).select_related(
-        *Profile.SELECT_RELATED_FIELDS
+    agent_profile = Profile.objects.select_related(*Profile.SELECT_RELATED_FIELDS).get(
+        id=profile_id, is_agent=True
     )
     data = request.data
 

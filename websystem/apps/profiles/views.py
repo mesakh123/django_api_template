@@ -10,8 +10,8 @@ from .serializers import ProfileSerializer, UpdateProfileSerializer
 
 class AgentListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Profile.objects.filter(is_agent=True).select_related(
-        *Profile.SELECT_RELATED_FIELDS
+    queryset = Profile.objects.select_related(*Profile.SELECT_RELATED_FIELDS).filter(
+        is_agent=True
     )
     serializer_class = ProfileSerializer
 
