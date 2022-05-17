@@ -21,16 +21,18 @@ services:
         networks:
             - estate-react
 
-#   client:
-#       build:
-#           context: ./client
-#           dockerfile: ./docker/local/Dockerfile
-#       restart: on-failure
-#       volumes:
-#           - ./client:/app
-#           - /app/node_modules
-#       networks:
-#           - estate-react
+    frontend:
+        build:
+            context: .
+            dockerfile: ./docker/local/frontend/Dockerfile
+        restart: always
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
+        environment:
+        - CHOKIDAR_USEPOLLING=true
+        networks:
+            - estate-react
 
     postgres-db:
         restart: always
