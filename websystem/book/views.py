@@ -16,28 +16,27 @@ class BookViewSet(AdvFlexFieldsMixin, ModelViewSet):
 
     queryset = Book.objects.all().prefetch_related(*Book.PREFETCHED_RELATED_FIELDS)
     serializer_class = BookSerializer
-    authentication_classes = (JWTAuthentication,)
+
     # Limit action , accepted settings:
     # create, retrieve, update, partial_update,destroy and list
-    public_action = ["list"]
+    public_action = [
+        "list",
+        "retrieve",
+    ]
+    authentication_classes = (JWTAuthentication,)
     protected_action = [
         "create",
-        "retrieve",
         "update",
         "partial_update",
     ] + public_action
     private_action = ["destroy"] + protected_action
 
-    def get_permissions(self):
+    def perform_authentication(self, request):
         if self.action in self.public_action:
-            return [
-                permissions.AllowAny(),
-            ]
-        elif self.action in self.protected_action:
-            return [AdminManagerPermission()]
-        elif self.action in self.private_action:
-            return [AdminPermission()]
-        return super().get_permissions()
+            self.authentication_classes = []
+        else:
+            self.authentication_classes = [JWTAuthentication]
+        return self.check_permissions(request)
 
 
 class AuthorViewSet(AdvFlexFieldsMixin, ModelViewSet):
@@ -48,10 +47,12 @@ class AuthorViewSet(AdvFlexFieldsMixin, ModelViewSet):
 
     # Limit action , accepted settings:
     # create, retrieve, update, partial_update,destroy and list
-    public_action = ["list"]
+    public_action = [
+        "list",
+        "retrieve",
+    ]
     protected_action = [
         "create",
-        "retrieve",
         "update",
         "partial_update",
     ] + public_action
@@ -59,11 +60,14 @@ class AuthorViewSet(AdvFlexFieldsMixin, ModelViewSet):
 
     def get_permissions(self):
         if self.action in self.public_action:
+            self.authentication_classes = []
             return [
                 permissions.AllowAny(),
             ]
         elif self.action in self.protected_action:
+            self.authentication_classes = (JWTAuthentication,)
             return [AdminManagerPermission()]
         elif self.action in self.private_action:
+            self.authentication_classes = (JWTAuthentication,)
             return [AdminPermission()]
         return super().get_permissions()

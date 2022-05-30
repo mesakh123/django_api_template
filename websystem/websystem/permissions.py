@@ -1,4 +1,4 @@
-from rest_framework.permissions import SAFE_METHODS, BasePermission
+from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
 
 from websystem.choices import ROLE_CHOICE
 
@@ -41,6 +41,7 @@ class AdminEmployeePermission(BasePermission):
     message = "Need admin or employee privilege to perform this operation"
 
     def has_permission(self, request, view):
+        self.permission_classes = [IsAuthenticated]
         return hasattr(request.user, "role") and request.user.role in [
             ROLE_CHOICE.ADMIN,
             ROLE_CHOICE.EMPLOYEE,
@@ -51,6 +52,8 @@ class AdminManagerPermission(BasePermission):
     message = "Need admin or manager privilege to perform this operation"
 
     def has_permission(self, request, view):
+        self.permission_classes = [IsAuthenticated]
+        print("Request.user ", request.user)
         return hasattr(request.user, "role") and request.user.role in [
             ROLE_CHOICE.ADMIN,
             ROLE_CHOICE.MANAGER,
